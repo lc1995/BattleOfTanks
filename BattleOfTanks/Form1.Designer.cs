@@ -63,7 +63,7 @@
             // 
             // missileTimer
             // 
-            this.missileTimer.Interval = 200;
+            this.missileTimer.Interval = 50;
             this.missileTimer.Tick += new System.EventHandler(this.missileTimer_Tick);
             // 
             // tankTimer
@@ -73,7 +73,6 @@
             // 
             // tankMoveTimer
             // 
-            this.tankMoveTimer.Interval = 200;
             this.tankMoveTimer.Tick += new System.EventHandler(this.tankMoveTimer_Tick);
             // 
             // tankFireTimer

@@ -85,10 +85,10 @@ namespace BattleOfTanks
         }
 
         // 根据方向移动，isBack表示是否为相反操作
-        public void Move(bool isBack)
+        public void Move(bool isBack, int speed)
         {
             // 坦克单位位移量
-            const int quantity = 20;
+            int quantity = speed;
 
             int isBackInt = isBack ? -1:1 ;
 
@@ -175,6 +175,17 @@ namespace BattleOfTanks
             {
                 if (this.IsCrashed(w) && !w.IsMissilePassable)
                     return w;
+            }
+            return null;
+        }
+
+        // 是否与其他子弹碰撞
+        public Missile IsCrashedWithMissile()
+        {
+            foreach(Missile m in aryMissile)
+            {
+                if (this != m && this.IsCrashed(m))
+                    return m;
             }
             return null;
         }

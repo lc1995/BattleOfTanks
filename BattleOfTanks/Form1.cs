@@ -53,25 +53,25 @@ namespace BattleOfTanks
                 {
                     case Keys.Up:
                         p1tank.Direction = "U";
-                        p1tank.Move(false);
+                        p1tank.Move(false, 20);
                         if (p1tank.IsOutOfRange(gameScene.Width, gameScene.Height) || p1tank.IsCrashedWithTank() || p1tank.IsCrashedWithWall())
                             p1tank.Y += 20;
                         break;
                     case Keys.Down:
                         p1tank.Direction = "D";
-                        p1tank.Move(false);
+                        p1tank.Move(false, 20);
                         if (p1tank.IsOutOfRange(gameScene.Width, gameScene.Height) || p1tank.IsCrashedWithTank() || p1tank.IsCrashedWithWall())
                             p1tank.Y -= 20;
                         break;
                     case Keys.Left:
                         p1tank.Direction = "L";
-                        p1tank.Move(false);
+                        p1tank.Move(false, 20);
                         if (p1tank.IsOutOfRange(gameScene.Width, gameScene.Height) || p1tank.IsCrashedWithTank() || p1tank.IsCrashedWithWall())
                             p1tank.X += 20;
                         break;
                     case Keys.Right:
                         p1tank.Direction = "R";
-                        p1tank.Move(false);
+                        p1tank.Move(false, 20);
                         if (p1tank.IsOutOfRange(gameScene.Width, gameScene.Height) || p1tank.IsCrashedWithTank() || p1tank.IsCrashedWithWall())
                             p1tank.X -= 20;
                         break;
@@ -99,25 +99,25 @@ namespace BattleOfTanks
                 {
                     case Keys.W:
                         p2tank.Direction = "U";
-                        p2tank.Move(false);
+                        p2tank.Move(false, 10);
                         if (p2tank.IsOutOfRange(gameScene.Width, gameScene.Height) || p2tank.IsCrashedWithTank() || p2tank.IsCrashedWithWall())
                             p2tank.Y += 20;
                         break;
                     case Keys.S:
                         p2tank.Direction = "D";
-                        p2tank.Move(false);
+                        p2tank.Move(false, 10);
                         if (p2tank.IsOutOfRange(gameScene.Width, gameScene.Height) || p2tank.IsCrashedWithTank() || p2tank.IsCrashedWithWall())
                             p2tank.Y -= 20;
                         break;
                     case Keys.A:
                         p2tank.Direction = "L";
-                        p2tank.Move(false);
+                        p2tank.Move(false, 10);
                         if (p2tank.IsOutOfRange(gameScene.Width, gameScene.Height) || p2tank.IsCrashedWithTank() || p2tank.IsCrashedWithWall())
                             p2tank.X += 20;
                         break;
                     case Keys.D:
                         p2tank.Direction = "R";
-                        p2tank.Move(false);
+                        p2tank.Move(false, 10);
                         if (p2tank.IsOutOfRange(gameScene.Width, gameScene.Height) || p2tank.IsCrashedWithTank() || p2tank.IsCrashedWithWall())
                             p2tank.X -= 20;
                         break;
@@ -219,20 +219,30 @@ namespace BattleOfTanks
                     continue;
                 }
 
+                // 检测是否命中其他子弹，如果子弹，消除两个子弹
+                Missile m2;
+                if((m2 = m.IsCrashedWithMissile()) != null)
+                {
+                    Missile.aryMissile.Remove(m);
+                    Missile.aryMissile.Remove(m2);
+
+                    continue;
+                }
+
                 // 子弹移动
                 switch(m.Direction)
                 {
                     case "U":
-                        m.Y -= 40;
+                        m.Y -= 10;
                         break;
                     case "D":
-                        m.Y += 40;
+                        m.Y += 10;
                         break;
                     case "L":
-                        m.X -= 40;
+                        m.X -= 10;
                         break;
                     case "R":
-                        m.X += 40;
+                        m.X += 10;
                         break;
                 }
             }
@@ -274,10 +284,10 @@ namespace BattleOfTanks
                 // 默认按照原反向移动，碰到障碍则随机切换方向
                 // 0表示左，1表示右，2表示上，3表示下，其他表示按照原反向
                 Random rd = new Random();
-                t.Move(false);
+                t.Move(false, 10);
                 while(t.IsOutOfRange(gameScene.Width, gameScene.Height) || t.IsCrashedWithTank() || t.IsCrashedWithWall())
                 {
-                    t.Move(true);
+                    t.Move(true, 10);
 
                     switch(rd.Next(4))
                     {
@@ -296,13 +306,13 @@ namespace BattleOfTanks
                         default:
                             break;
                     }
-                    t.Move(false);
+                    t.Move(false, 10);
 
                     // 若出现死循环，强制跳出
                     codeCounter++;
                     if(codeCounter == 10)
                     {
-                        t.Move(true);
+                        t.Move(true, 10);
 
                         codeCounter = 0;
                         break;

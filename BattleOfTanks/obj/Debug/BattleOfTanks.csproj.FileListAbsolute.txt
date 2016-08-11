@@ -6,3 +6,4 @@ c:\users\49899\documents\visual studio 2015\Projects\BattleOfTanks\BattleOfTanks
 c:\users\49899\documents\visual studio 2015\Projects\BattleOfTanks\BattleOfTanks\obj\Debug\BattleOfTanks.csproj.GenerateResource.Cache
 c:\users\49899\documents\visual studio 2015\Projects\BattleOfTanks\BattleOfTanks\obj\Debug\BattleOfTanks.exe
 c:\users\49899\documents\visual studio 2015\Projects\BattleOfTanks\BattleOfTanks\obj\Debug\BattleOfTanks.pdb
+C:\Users\49899\Documents\Visual Studio 2015\Projects\BattleOfTanks\BattleOfTanks\obj\Debug\BattleOfTanks.csprojResolveAssemblyReference.cache
