@@ -1,0 +1,8 @@
+c:\users\49899\documents\visual studio 2015\Projects\BattleOfTanks\BattleOfTanks\bin\Debug\BattleOfTanks.exe.config
+c:\users\49899\documents\visual studio 2015\Projects\BattleOfTanks\BattleOfTanks\bin\Debug\BattleOfTanks.exe
+c:\users\49899\documents\visual studio 2015\Projects\BattleOfTanks\BattleOfTanks\bin\Debug\BattleOfTanks.pdb
+c:\users\49899\documents\visual studio 2015\Projects\BattleOfTanks\BattleOfTanks\obj\Debug\BattleOfTanks.Form1.resources
+c:\users\49899\documents\visual studio 2015\Projects\BattleOfTanks\BattleOfTanks\obj\Debug\BattleOfTanks.Properties.Resources.resources
+c:\users\49899\documents\visual studio 2015\Projects\BattleOfTanks\BattleOfTanks\obj\Debug\BattleOfTanks.csproj.GenerateResource.Cache
+c:\users\49899\documents\visual studio 2015\Projects\BattleOfTanks\BattleOfTanks\obj\Debug\BattleOfTanks.exe
+c:\users\49899\documents\visual studio 2015\Projects\BattleOfTanks\BattleOfTanks\obj\Debug\BattleOfTanks.pdb
