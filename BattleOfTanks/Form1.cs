@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Diagnostics;
 using System.Media;
+using System.Collections;
 
 
 namespace BattleOfTanks
@@ -18,11 +19,23 @@ namespace BattleOfTanks
         // 记录某块代码的运行次数
         private static int codeCounter = 0;
 
+        // 记录上一个按键事件的时间，用于优化按键操作
+        private static DateTime oldDate = DateTime.Now;
+
+        // 记录所有非重复键值，KeyDown时添加，KeyUp时删除，用于优化按键操作
+        private static ArrayList aryKey = new ArrayList();
+
         // 记录游戏得分
         private int score = 0;
 
         // 背景音乐
         private SoundPlayer bgSp;
+
+        // 发射音效
+        private SoundPlayer fireSp = new SoundPlayer(Properties.Resources.fire);
+
+        // 爆炸音效
+        private SoundPlayer blastSp = new SoundPlayer(Properties.Resources.blast);
 
         public Form1()
         {
@@ -37,99 +50,14 @@ namespace BattleOfTanks
         // 响应键盘操作
         private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
-            // 响应玩家1键盘操作
-            Tank p1tank = null;
-            foreach (Tank t in Tank.aryTank)
-            {
-                if (t.TankType == 1)
-                {
-                    p1tank = t;
-                    break;
-                }
-            }
-            if (p1tank != null)
-            {
-                switch (e.KeyCode)
-                {
-                    case Keys.Up:
-                        p1tank.Direction = "U";
-                        p1tank.Move(false, 20);
-                        if (p1tank.IsOutOfRange(gameScene.Width, gameScene.Height) || p1tank.IsCrashedWithTank() || p1tank.IsCrashedWithWall())
-                            p1tank.Y += 20;
-                        break;
-                    case Keys.Down:
-                        p1tank.Direction = "D";
-                        p1tank.Move(false, 20);
-                        if (p1tank.IsOutOfRange(gameScene.Width, gameScene.Height) || p1tank.IsCrashedWithTank() || p1tank.IsCrashedWithWall())
-                            p1tank.Y -= 20;
-                        break;
-                    case Keys.Left:
-                        p1tank.Direction = "L";
-                        p1tank.Move(false, 20);
-                        if (p1tank.IsOutOfRange(gameScene.Width, gameScene.Height) || p1tank.IsCrashedWithTank() || p1tank.IsCrashedWithWall())
-                            p1tank.X += 20;
-                        break;
-                    case Keys.Right:
-                        p1tank.Direction = "R";
-                        p1tank.Move(false, 20);
-                        if (p1tank.IsOutOfRange(gameScene.Width, gameScene.Height) || p1tank.IsCrashedWithTank() || p1tank.IsCrashedWithWall())
-                            p1tank.X -= 20;
-                        break;
-                    case Keys.NumPad2:
-                        p1tank.Fire();
-                        break;
-                    default:
-                        break;
-                }
-            }
+            // 记录非重复键值
+            if (!aryKey.Contains(e.KeyCode))
+                aryKey.Add(e.KeyCode);
+        }
 
-            // 响应玩家2键盘操作
-            Tank p2tank = null;
-            foreach (Tank t in Tank.aryTank)
-            {
-                if (t.TankType == 2)
-                {
-                    p2tank = t;
-                    break;
-                }
-            }
-            if (p2tank != null)
-            {
-                switch (e.KeyCode)
-                {
-                    case Keys.W:
-                        p2tank.Direction = "U";
-                        p2tank.Move(false, 10);
-                        if (p2tank.IsOutOfRange(gameScene.Width, gameScene.Height) || p2tank.IsCrashedWithTank() || p2tank.IsCrashedWithWall())
-                            p2tank.Y += 20;
-                        break;
-                    case Keys.S:
-                        p2tank.Direction = "D";
-                        p2tank.Move(false, 10);
-                        if (p2tank.IsOutOfRange(gameScene.Width, gameScene.Height) || p2tank.IsCrashedWithTank() || p2tank.IsCrashedWithWall())
-                            p2tank.Y -= 20;
-                        break;
-                    case Keys.A:
-                        p2tank.Direction = "L";
-                        p2tank.Move(false, 10);
-                        if (p2tank.IsOutOfRange(gameScene.Width, gameScene.Height) || p2tank.IsCrashedWithTank() || p2tank.IsCrashedWithWall())
-                            p2tank.X += 20;
-                        break;
-                    case Keys.D:
-                        p2tank.Direction = "R";
-                        p2tank.Move(false, 10);
-                        if (p2tank.IsOutOfRange(gameScene.Width, gameScene.Height) || p2tank.IsCrashedWithTank() || p2tank.IsCrashedWithWall())
-                            p2tank.X -= 20;
-                        break;
-                    case Keys.J:
-                        p2tank.Fire();
-                        break;
-                    default:
-                        break;
-                }
-            }
-
-            gameScene.Invalidate();
+        private void Form1_KeyUp(object sender, KeyEventArgs e)
+        {
+            aryKey.Remove(e.KeyCode);
         }
 
         // 重绘
@@ -197,6 +125,9 @@ namespace BattleOfTanks
                     // 爆炸动画
                     Animation blastAnimation = new Animation(t.X, t.Y, 60, "blast", 8);
                     Animation.aryAnimation.Add(blastAnimation);
+
+                    // 爆炸音效
+                    blastSp.Play();
 
                     Tank.aryTank.Remove(t);
 
@@ -372,6 +303,7 @@ namespace BattleOfTanks
 
             // 启动计时器
             missileTimer.Start();
+            keyTimer.Start();
             tankTimer.Start();
             tankMoveTimer.Start();
             tankFireTimer.Start();
@@ -431,7 +363,7 @@ namespace BattleOfTanks
 
             // 背景音乐
             bgSp = new SoundPlayer(Properties.Resources.start);
-            bgSp.PlayLooping();
+            bgSp.Play();
 
         }
 
@@ -445,7 +377,8 @@ namespace BattleOfTanks
 
             // 启动计时器
             missileTimer.Start();
-            tankTimer.Start();
+            keyTimer.Start();
+            // tankTimer.Start();
             tankMoveTimer.Start();
             tankFireTimer.Start();
 
@@ -503,6 +436,10 @@ namespace BattleOfTanks
                     }
                 }
             }
+
+            // 背景音乐
+            bgSp = new SoundPlayer(Properties.Resources.start);
+            bgSp.Play();
         }
 
         // 动画播放计时器
@@ -517,6 +454,109 @@ namespace BattleOfTanks
                 {
                     Animation.aryAnimation.Remove(a);
                     continue;
+                }
+            }
+            gameScene.Invalidate();
+        }
+
+        // 键盘响应计时器
+        private void keyTimer_Tick(object sender, EventArgs e)
+        {
+            // 遍历所有非重复的按键
+            foreach (Keys keyCode in aryKey)
+            {
+                // 响应玩家1键盘操作
+                Tank p1tank = null;
+                foreach (Tank t in Tank.aryTank)
+                {
+                    if (t.TankType == 1)
+                    {
+                        p1tank = t;
+                        break;
+                    }
+                }
+                if (p1tank != null)
+                {
+                    switch (keyCode)
+                    {
+                        case Keys.Up:
+                            p1tank.Direction = "U";
+                            p1tank.Move(false, 6);
+                            if (p1tank.IsOutOfRange(gameScene.Width, gameScene.Height) || p1tank.IsCrashedWithTank() || p1tank.IsCrashedWithWall())
+                                p1tank.Y += 6;
+                            break;
+                        case Keys.Down:
+                            p1tank.Direction = "D";
+                            p1tank.Move(false, 6);
+                            if (p1tank.IsOutOfRange(gameScene.Width, gameScene.Height) || p1tank.IsCrashedWithTank() || p1tank.IsCrashedWithWall())
+                                p1tank.Y -= 6;
+                            break;
+                        case Keys.Left:
+                            p1tank.Direction = "L";
+                            p1tank.Move(false, 6);
+                            if (p1tank.IsOutOfRange(gameScene.Width, gameScene.Height) || p1tank.IsCrashedWithTank() || p1tank.IsCrashedWithWall())
+                                p1tank.X += 6;
+                            break;
+                        case Keys.Right:
+                            p1tank.Direction = "R";
+                            p1tank.Move(false, 6);
+                            if (p1tank.IsOutOfRange(gameScene.Width, gameScene.Height) || p1tank.IsCrashedWithTank() || p1tank.IsCrashedWithWall())
+                                p1tank.X -= 6;
+                            break;
+                        case Keys.NumPad2:
+                            p1tank.Fire();
+                            fireSp.Play();
+                            break;
+                        default:
+                            break;
+                    }
+                }
+
+                // 响应玩家2键盘操作
+                Tank p2tank = null;
+                foreach (Tank t in Tank.aryTank)
+                {
+                    if (t.TankType == 2)
+                    {
+                        p2tank = t;
+                        break;
+                    }
+                }
+                if (p2tank != null)
+                {
+                    switch (keyCode)
+                    {
+                        case Keys.W:
+                            p2tank.Direction = "U";
+                            p2tank.Move(false, 6);
+                            if (p2tank.IsOutOfRange(gameScene.Width, gameScene.Height) || p2tank.IsCrashedWithTank() || p2tank.IsCrashedWithWall())
+                                p2tank.Y += 6;
+                            break;
+                        case Keys.S:
+                            p2tank.Direction = "D";
+                            p2tank.Move(false, 6);
+                            if (p2tank.IsOutOfRange(gameScene.Width, gameScene.Height) || p2tank.IsCrashedWithTank() || p2tank.IsCrashedWithWall())
+                                p2tank.Y -= 6;
+                            break;
+                        case Keys.A:
+                            p2tank.Direction = "L";
+                            p2tank.Move(false, 6);
+                            if (p2tank.IsOutOfRange(gameScene.Width, gameScene.Height) || p2tank.IsCrashedWithTank() || p2tank.IsCrashedWithWall())
+                                p2tank.X += 6;
+                            break;
+                        case Keys.D:
+                            p2tank.Direction = "R";
+                            p2tank.Move(false, 6);
+                            if (p2tank.IsOutOfRange(gameScene.Width, gameScene.Height) || p2tank.IsCrashedWithTank() || p2tank.IsCrashedWithWall())
+                                p2tank.X -= 6;
+                            break;
+                        case Keys.J:
+                            p2tank.Fire();
+                            fireSp.Play();
+                            break;
+                        default:
+                            break;
+                    }
                 }
             }
             gameScene.Invalidate();

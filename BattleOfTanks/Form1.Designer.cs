@@ -46,6 +46,7 @@
             this.battleOfTanks = new System.Windows.Forms.Label();
             this.tipMessageBox = new System.Windows.Forms.TextBox();
             this.frameTimer = new System.Windows.Forms.Timer(this.components);
+            this.keyTimer = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.gameScene)).BeginInit();
             this.gameOverPanel.SuspendLayout();
             this.gameStartPanel.SuspendLayout();
@@ -209,6 +210,11 @@
             this.frameTimer.Interval = 200;
             this.frameTimer.Tick += new System.EventHandler(this.frameTimer_Tick);
             // 
+            // keyTimer
+            // 
+            this.keyTimer.Interval = 50;
+            this.keyTimer.Tick += new System.EventHandler(this.keyTimer_Tick);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -223,6 +229,7 @@
             this.Text = "Form1";
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.Form1_Paint);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
+            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyUp);
             ((System.ComponentModel.ISupportInitialize)(this.gameScene)).EndInit();
             this.gameOverPanel.ResumeLayout(false);
             this.gameOverPanel.PerformLayout();
@@ -252,6 +259,7 @@
         private System.Windows.Forms.Label battleOfTanks;
         private System.Windows.Forms.TextBox tipMessageBox;
         private System.Windows.Forms.Timer frameTimer;
+        private System.Windows.Forms.Timer keyTimer;
     }
 }
 

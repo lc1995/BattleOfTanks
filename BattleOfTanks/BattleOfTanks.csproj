@@ -181,10 +181,12 @@
     <None Include="Resources\blast8.gif" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\blast.wav" />
+    <None Include="Resources\start.wav" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\start.wav" />
+    <Content Include="readme.txt" />
+    <None Include="Resources\blast.wav" />
+    <None Include="Resources\fire.wav" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
