@@ -185,6 +185,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="readme.txt" />
+    <None Include="Resources\born3.gif" />
+    <None Include="Resources\born2.gif" />
+    <None Include="Resources\born1.gif" />
+    <None Include="Resources\born4.gif" />
+    <None Include="Resources\enemymissile.gif" />
     <None Include="Resources\blast.wav" />
     <None Include="Resources\fire.wav" />
   </ItemGroup>

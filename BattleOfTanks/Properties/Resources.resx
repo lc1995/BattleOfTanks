@@ -145,6 +145,18 @@
   <data name="blast8" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\blast8.gif;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="born1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\born1.gif;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="born2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\born2.gif;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="born3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\born3.gif;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="born4" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\born4.gif;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="enemy1D" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\enemy1D.gif;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -180,6 +192,9 @@
   </data>
   <data name="enemy3U" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\enemy3U.gif;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="enemymissile" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\enemymissile.gif;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="fire" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\fire.wav;System.IO.MemoryStream, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>

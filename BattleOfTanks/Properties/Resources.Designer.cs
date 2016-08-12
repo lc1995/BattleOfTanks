@@ -152,6 +152,46 @@ namespace BattleOfTanks.Properties {
         /// <summary>
         ///   查找 System.Drawing.Bitmap 类型的本地化资源。
         /// </summary>
+        internal static System.Drawing.Bitmap born1 {
+            get {
+                object obj = ResourceManager.GetObject("born1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查找 System.Drawing.Bitmap 类型的本地化资源。
+        /// </summary>
+        internal static System.Drawing.Bitmap born2 {
+            get {
+                object obj = ResourceManager.GetObject("born2", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查找 System.Drawing.Bitmap 类型的本地化资源。
+        /// </summary>
+        internal static System.Drawing.Bitmap born3 {
+            get {
+                object obj = ResourceManager.GetObject("born3", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查找 System.Drawing.Bitmap 类型的本地化资源。
+        /// </summary>
+        internal static System.Drawing.Bitmap born4 {
+            get {
+                object obj = ResourceManager.GetObject("born4", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查找 System.Drawing.Bitmap 类型的本地化资源。
+        /// </summary>
         internal static System.Drawing.Bitmap enemy1D {
             get {
                 object obj = ResourceManager.GetObject("enemy1D", resourceCulture);
@@ -265,6 +305,16 @@ namespace BattleOfTanks.Properties {
         internal static System.Drawing.Bitmap enemy3U {
             get {
                 object obj = ResourceManager.GetObject("enemy3U", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查找 System.Drawing.Bitmap 类型的本地化资源。
+        /// </summary>
+        internal static System.Drawing.Bitmap enemymissile {
+            get {
+                object obj = ResourceManager.GetObject("enemymissile", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

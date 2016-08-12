@@ -68,6 +68,9 @@ namespace BattleOfTanks
         // 静态数组，存放所有Tank类实例
         public static ArrayList aryTank = new ArrayList();
 
+        // 静态数组，存放刚生成的坦克的缓存
+        public static ArrayList aryTankCache = new ArrayList();
+
         // 构造函数
         public Tank(int x, int y, int length, string textureFile, bool isPlayer, int tankType) : base(x, y, length, textureFile)
         {
@@ -79,9 +82,27 @@ namespace BattleOfTanks
         // 发射子弹
         public Missile Fire()
         {
-            Missile missile = new Missile(X + Length / 2 - 9, Y + Length / 2 - 9, 18, "tankmissile", Direction, IsPlayer);
+            string missileType = IsPlayer ? "tankmissile" : "enemymissile";
 
-            return missile;
+            switch (Direction)
+            {
+                case "U":
+                    Missile.aryMissile.Add(new Missile(X + Length / 2 - 9, Y, 18, missileType, Direction, IsPlayer));
+                    break;
+                case "D":
+                    Missile.aryMissile.Add(new Missile(X + Length / 2 - 9, Y + Length, 18, missileType, Direction, IsPlayer));
+                    break;
+                case "L":
+                    Missile.aryMissile.Add(new Missile(X, Y + Length / 2 - 9, 18, missileType, Direction, IsPlayer));
+                    break;
+                case "R":
+                    Missile.aryMissile.Add(new Missile(X + Length, Y + Length / 2 - 9, 18, missileType, Direction, IsPlayer));
+                    break;
+                default:
+                    break;
+            }
+
+            return (Missile)Missile.aryMissile[Missile.aryMissile.Count - 1];
         }
 
         // 根据方向移动，isBack表示是否为相反操作
@@ -132,6 +153,17 @@ namespace BattleOfTanks
             }
             return false;
         }
+
+        // 是否与动画碰撞
+        public bool IsCrashedWithAnimation()
+        {
+            foreach(Animation anim in Animation.aryAnimation)
+            {
+                if (IsCrashed(anim))
+                    return true;
+            }
+            return false;
+        }
     }
     
     // 子弹类
@@ -151,8 +183,6 @@ namespace BattleOfTanks
         {
             Direction = direction;
             IsFromPlayer = isFromPlayer;
-
-            aryMissile.Add(this);
         }
 
         // 是否命中目标
