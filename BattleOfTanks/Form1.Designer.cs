@@ -40,6 +40,7 @@
             this.scoreLabel = new System.Windows.Forms.Label();
             this.gameOverLabel = new System.Windows.Forms.Label();
             this.gameStartPanel = new System.Windows.Forms.Panel();
+            this.button4 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
@@ -47,9 +48,22 @@
             this.tipMessageBox = new System.Windows.Forms.TextBox();
             this.frameTimer = new System.Windows.Forms.Timer(this.components);
             this.keyTimer = new System.Windows.Forms.Timer(this.components);
+            this.itemTimer = new System.Windows.Forms.Timer(this.components);
+            this.button5 = new System.Windows.Forms.Button();
+            this.button6 = new System.Windows.Forms.Button();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.selectWall_0 = new System.Windows.Forms.PictureBox();
+            this.selectWall_1 = new System.Windows.Forms.PictureBox();
+            this.selectWall_2 = new System.Windows.Forms.PictureBox();
+            this.selectWall_3 = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.gameScene)).BeginInit();
             this.gameOverPanel.SuspendLayout();
             this.gameStartPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.selectWall_0)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.selectWall_1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.selectWall_2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.selectWall_3)).BeginInit();
             this.SuspendLayout();
             // 
             // gameScene
@@ -111,7 +125,7 @@
             this.restartGame.Name = "restartGame";
             this.restartGame.Size = new System.Drawing.Size(160, 80);
             this.restartGame.TabIndex = 2;
-            this.restartGame.Text = "重新开始";
+            this.restartGame.Text = "返回菜单";
             this.restartGame.UseVisualStyleBackColor = true;
             this.restartGame.Click += new System.EventHandler(this.restartGame_Click);
             // 
@@ -141,18 +155,29 @@
             // 
             // gameStartPanel
             // 
+            this.gameStartPanel.Controls.Add(this.button4);
             this.gameStartPanel.Controls.Add(this.button3);
             this.gameStartPanel.Controls.Add(this.button2);
             this.gameStartPanel.Controls.Add(this.button1);
             this.gameStartPanel.Controls.Add(this.battleOfTanks);
             this.gameStartPanel.Location = new System.Drawing.Point(218, 194);
             this.gameStartPanel.Name = "gameStartPanel";
-            this.gameStartPanel.Size = new System.Drawing.Size(383, 443);
+            this.gameStartPanel.Size = new System.Drawing.Size(383, 494);
             this.gameStartPanel.TabIndex = 2;
+            // 
+            // button4
+            // 
+            this.button4.Location = new System.Drawing.Point(109, 293);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(173, 70);
+            this.button4.TabIndex = 4;
+            this.button4.Text = "新建地图";
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(109, 295);
+            this.button3.Location = new System.Drawing.Point(109, 369);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(173, 70);
             this.button3.TabIndex = 3;
@@ -195,13 +220,14 @@
             this.tipMessageBox.BackColor = System.Drawing.Color.DarkGray;
             this.tipMessageBox.Font = new System.Drawing.Font("宋体", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.tipMessageBox.ForeColor = System.Drawing.Color.Purple;
-            this.tipMessageBox.Location = new System.Drawing.Point(827, 12);
+            this.tipMessageBox.Location = new System.Drawing.Point(810, 13);
             this.tipMessageBox.Multiline = true;
             this.tipMessageBox.Name = "tipMessageBox";
             this.tipMessageBox.ReadOnly = true;
             this.tipMessageBox.Size = new System.Drawing.Size(353, 761);
             this.tipMessageBox.TabIndex = 3;
-            this.tipMessageBox.Text = "按键提示：\r\n玩家1：\r\n方向键控制移动，Num2发射子弹\r\n玩家2：\r\nWSAD控制移动，J键发射子弹";
+            this.tipMessageBox.Text = "按键提示：\r\n玩家1：\r\n方向键控制移动，Num2发射子弹\r\n玩家2：\r\nWSAD控制移动，J键发射子弹\r\n\r\n道具效果：\r\n炸弹 -- 清除所有地方坦克\r\n星星" +
+    " -- 升级炮弹，超过3个可以破坏刚墙\r\n定时器 -- 暂停3秒";
             // 
             // frameTimer
             // 
@@ -214,14 +240,104 @@
             this.keyTimer.Interval = 50;
             this.keyTimer.Tick += new System.EventHandler(this.keyTimer_Tick);
             // 
+            // itemTimer
+            // 
+            this.itemTimer.Interval = 15000;
+            this.itemTimer.Tick += new System.EventHandler(this.itemTimer_Tick);
+            // 
+            // button5
+            // 
+            this.button5.Location = new System.Drawing.Point(845, 291);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(173, 70);
+            this.button5.TabIndex = 4;
+            this.button5.Text = "单人游戏";
+            this.button5.UseVisualStyleBackColor = true;
+            this.button5.Visible = false;
+            this.button5.Click += new System.EventHandler(this.GameBeginInMode);
+            // 
+            // button6
+            // 
+            this.button6.Location = new System.Drawing.Point(845, 385);
+            this.button6.Name = "button6";
+            this.button6.Size = new System.Drawing.Size(173, 70);
+            this.button6.TabIndex = 5;
+            this.button6.Text = "双人游戏";
+            this.button6.UseVisualStyleBackColor = true;
+            this.button6.Visible = false;
+            this.button6.Click += new System.EventHandler(this.GameBeginInMode);
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Location = new System.Drawing.Point(-23, -46);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(100, 50);
+            this.pictureBox1.TabIndex = 6;
+            this.pictureBox1.TabStop = false;
+            // 
+            // selectWall_0
+            // 
+            this.selectWall_0.Image = global::BattleOfTanks.Properties.Resources.walls;
+            this.selectWall_0.Location = new System.Drawing.Point(845, 480);
+            this.selectWall_0.Name = "selectWall_0";
+            this.selectWall_0.Size = new System.Drawing.Size(60, 60);
+            this.selectWall_0.TabIndex = 7;
+            this.selectWall_0.TabStop = false;
+            this.selectWall_0.Tag = "0";
+            this.selectWall_0.Visible = false;
+            this.selectWall_0.Click += new System.EventHandler(this.SelectWall);
+            // 
+            // selectWall_1
+            // 
+            this.selectWall_1.Image = global::BattleOfTanks.Properties.Resources.steels;
+            this.selectWall_1.Location = new System.Drawing.Point(921, 480);
+            this.selectWall_1.Name = "selectWall_1";
+            this.selectWall_1.Size = new System.Drawing.Size(60, 60);
+            this.selectWall_1.TabIndex = 8;
+            this.selectWall_1.TabStop = false;
+            this.selectWall_1.Tag = "1";
+            this.selectWall_1.Visible = false;
+            this.selectWall_1.Click += new System.EventHandler(this.SelectWall);
+            // 
+            // selectWall_2
+            // 
+            this.selectWall_2.Image = global::BattleOfTanks.Properties.Resources.water;
+            this.selectWall_2.Location = new System.Drawing.Point(998, 480);
+            this.selectWall_2.Name = "selectWall_2";
+            this.selectWall_2.Size = new System.Drawing.Size(60, 60);
+            this.selectWall_2.TabIndex = 9;
+            this.selectWall_2.TabStop = false;
+            this.selectWall_2.Tag = "2";
+            this.selectWall_2.Visible = false;
+            this.selectWall_2.Click += new System.EventHandler(this.SelectWall);
+            // 
+            // selectWall_3
+            // 
+            this.selectWall_3.Image = global::BattleOfTanks.Properties.Resources.grass;
+            this.selectWall_3.Location = new System.Drawing.Point(1073, 480);
+            this.selectWall_3.Name = "selectWall_3";
+            this.selectWall_3.Size = new System.Drawing.Size(60, 60);
+            this.selectWall_3.TabIndex = 10;
+            this.selectWall_3.TabStop = false;
+            this.selectWall_3.Tag = "3";
+            this.selectWall_3.Visible = false;
+            this.selectWall_3.Click += new System.EventHandler(this.SelectWall);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1440, 800);
+            this.ClientSize = new System.Drawing.Size(1180, 800);
+            this.Controls.Add(this.gameOverPanel);
+            this.Controls.Add(this.selectWall_3);
+            this.Controls.Add(this.selectWall_2);
+            this.Controls.Add(this.selectWall_1);
+            this.Controls.Add(this.selectWall_0);
+            this.Controls.Add(this.pictureBox1);
+            this.Controls.Add(this.button6);
+            this.Controls.Add(this.button5);
             this.Controls.Add(this.tipMessageBox);
             this.Controls.Add(this.gameStartPanel);
-            this.Controls.Add(this.gameOverPanel);
             this.Controls.Add(this.gameScene);
             this.KeyPreview = true;
             this.Name = "Form1";
@@ -234,6 +350,11 @@
             this.gameOverPanel.PerformLayout();
             this.gameStartPanel.ResumeLayout(false);
             this.gameStartPanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.selectWall_0)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.selectWall_1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.selectWall_2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.selectWall_3)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -259,6 +380,15 @@
         private System.Windows.Forms.TextBox tipMessageBox;
         private System.Windows.Forms.Timer frameTimer;
         private System.Windows.Forms.Timer keyTimer;
+        private System.Windows.Forms.Timer itemTimer;
+        private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.Button button5;
+        private System.Windows.Forms.Button button6;
+        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.PictureBox selectWall_0;
+        private System.Windows.Forms.PictureBox selectWall_1;
+        private System.Windows.Forms.PictureBox selectWall_2;
+        private System.Windows.Forms.PictureBox selectWall_3;
     }
 }
 

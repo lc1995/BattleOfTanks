@@ -53,6 +53,7 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Interface.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Form1.resx">
@@ -185,6 +186,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="readme.txt" />
+    <None Include="Resources\star.gif" />
+    <None Include="Resources\bomb.gif" />
+    <None Include="Resources\timer.gif" />
     <None Include="Resources\born3.gif" />
     <None Include="Resources\born2.gif" />
     <None Include="Resources\born1.gif" />

@@ -3,7 +3,7 @@
 "VSVersion" = "3:800"
 "ProjectType" = "8:{978C614F-708E-4E1A-B201-565925725DBA}"
 "IsWebType" = "8:FALSE"
-"ProjectName" = "8:坦克大战v0.2"
+"ProjectName" = "8:坦克大战v1.0"
 "LanguageId" = "3:2052"
 "CodePage" = "3:936"
 "UILanguageId" = "3:2052"
@@ -106,6 +106,14 @@
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.5"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.5 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.5"
+                    }
+                }
             }
         }
     }
@@ -397,7 +405,7 @@
         {
             "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_160C853564314C61BEB34DA7D4A7B685"
             {
-            "Name" = "8:坦克大战v0.2"
+            "Name" = "8:坦克大战v1.0"
             "Arguments" = "8:"
             "Description" = "8:"
             "ShowCmd" = "3:1"
@@ -425,7 +433,7 @@
             }
             "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_72763C8E25CB4CAFB96F0DC81DB080B3"
             {
-            "Name" = "8:坦克大战v0.1"
+            "Name" = "8:坦克大战v1.0"
             "Arguments" = "8:"
             "Description" = "8:"
             "ShowCmd" = "3:1"

@@ -20,10 +20,23 @@ namespace BattleOfTanks
         private static int codeCounter = 0;
 
         // 记录上一次P1开火的时间，用于优化按键操作
-        private static DateTime oldDate = DateTime.Now;
+        private static DateTime oldDate1 = DateTime.Now;
+        // 记录上一次P2开火的时间，用于优化按键操作
+        private static DateTime oldDate2 = DateTime.Now;
 
         // 记录所有非重复键值，KeyDown时添加，KeyUp时删除，用于优化按键操作
         private static ArrayList aryKey = new ArrayList();
+
+        // 是否发生时间静止
+        private bool isTimeStop = false;
+
+        // 自建地图模式中，单位类型
+        // 0 -- 土墙， 1 -- 刚墙， 2 -- 河流， 3 -- 树林
+        private int objectType = 0;
+
+        // 自建地图模式中，预览的墙体的坐标和类型
+        private int preX = -60;
+        private int preY = -60;
 
         // 记录游戏得分
         private int score = 0;
@@ -75,12 +88,32 @@ namespace BattleOfTanks
                 g.DrawImage(bmp, t.X, t.Y, t.Length, t.Length);
             }
 
-            // 重绘墙体
+            // 重绘墙体            
             foreach (Wall w in Wall.aryWall)
             {
                 // 获取图片并绘制
                 Bitmap bmp = (Bitmap)Properties.Resources.ResourceManager.GetObject(w.TextureFile);
                 g.DrawImage(bmp, w.X, w.Y, w.Length, w.Length);
+            }
+
+            switch(objectType)
+            {
+                case 0:
+                    Bitmap bmp = Properties.Resources.walls;
+                    g.DrawImage(bmp, preX, preY);
+                    break;
+                case 1:
+                    bmp = Properties.Resources.steels;
+                    g.DrawImage(bmp, preX, preY);
+                    break;
+                case 2:
+                    bmp = Properties.Resources.water;
+                    g.DrawImage(bmp, preX, preY);
+                    break;
+                case 3:
+                    bmp = Properties.Resources.grass;
+                    g.DrawImage(bmp, preX, preY);
+                    break;
             }
 
             // 重绘动画
@@ -98,6 +131,14 @@ namespace BattleOfTanks
                 // 获取图片并绘制
                 Bitmap bmp = (Bitmap)Properties.Resources.ResourceManager.GetObject(m.TextureFile);
                 g.DrawImage(bmp, m.X, m.Y, m.Length, m.Length);
+            }
+
+            // 重绘道具
+            foreach(Item i in Item.aryItems)
+            {
+                // 获取图片并绘制
+                Bitmap bmp = (Bitmap)Properties.Resources.ResourceManager.GetObject(i.TextureFile);
+                g.DrawImage(bmp, i.X, i.Y, i.Length, i.Length);
             }
         }
 
@@ -120,8 +161,6 @@ namespace BattleOfTanks
                 Tank t;
                 if ((t = m.IsHitted()) != null)
                 {
-                    if (t.IsPlayer)
-                        GameOver();
                     // 爆炸动画
                     Animation blastAnimation = new Animation(t.X, t.Y, 60, "blast", 8);
                     Animation.aryAnimation.Add(blastAnimation);
@@ -137,6 +176,9 @@ namespace BattleOfTanks
                     // 得分
                     score += 10;
 
+                    // 如果没有玩家坦克，游戏结束
+                    if (!((Tank)Tank.aryTank[0]).IsPlayer)
+                        GameOver();
                     continue;
                 }
 
@@ -145,7 +187,7 @@ namespace BattleOfTanks
                 if((w = m.IsCrashedWithWall()) != null)
                 {
                     Missile.aryMissile.Remove(m);
-                    if (w.AbleToBeDestory == true)
+                    if (w.AbleToBeDestory == true || (w.TextureFile == "steels" && m.Length >= 25))
                         Wall.aryWall.Remove(w);
                     continue;
                 }
@@ -212,6 +254,8 @@ namespace BattleOfTanks
         // 敌方坦克移动计时器
         private void tankMoveTimer_Tick(object sender, EventArgs e)
         {
+            if (isTimeStop)
+                return;
             foreach(Tank t in Tank.aryTank)
             {
                 if (t.IsPlayer == true)
@@ -260,6 +304,8 @@ namespace BattleOfTanks
         // 敌方坦克开火计时器
         private void tankFireTimer_Tick(object sender, EventArgs e)
         {
+            if (isTimeStop)
+                return;
             foreach (Tank t in Tank.aryTank)
             {
                 // 排除玩家坦克
@@ -333,42 +379,84 @@ namespace BattleOfTanks
                     {
                         case Keys.Up:
                             p1tank.Direction = "U";
-                            p1tank.Move(false, 6);
-                            if (p1tank.IsOutOfRange(gameScene.Width, gameScene.Height) || p1tank.IsCrashedWithTank() || p1tank.IsCrashedWithWall() || p1tank.IsCrashedWithAnimation())
-                                p1tank.Y += 6;
+                            p1tank.TrueMove(gameScene.Width, gameScene.Height);
                             break;
                         case Keys.Down:
                             p1tank.Direction = "D";
-                            p1tank.Move(false, 6);
-                            if (p1tank.IsOutOfRange(gameScene.Width, gameScene.Height) || p1tank.IsCrashedWithTank() || p1tank.IsCrashedWithWall() || p1tank.IsCrashedWithAnimation())
-                                p1tank.Y -= 6;
+                            p1tank.TrueMove(gameScene.Width, gameScene.Height);
                             break;
                         case Keys.Left:
                             p1tank.Direction = "L";
-                            p1tank.Move(false, 6);
-                            if (p1tank.IsOutOfRange(gameScene.Width, gameScene.Height) || p1tank.IsCrashedWithTank() || p1tank.IsCrashedWithWall() || p1tank.IsCrashedWithAnimation())
-                                p1tank.X += 6;
+                            p1tank.TrueMove(gameScene.Width, gameScene.Height);
                             break;
                         case Keys.Right:
                             p1tank.Direction = "R";
-                            p1tank.Move(false, 6);
-                            if (p1tank.IsOutOfRange(gameScene.Width, gameScene.Height) || p1tank.IsCrashedWithTank() || p1tank.IsCrashedWithWall() || p1tank.IsCrashedWithAnimation())
-                                p1tank.X -= 6;
+                            p1tank.TrueMove(gameScene.Width, gameScene.Height);
                             break;
                         case Keys.NumPad2:
                             DateTime newDate = DateTime.Now;
-                            TimeSpan fireSpan = newDate - oldDate;
+                            TimeSpan fireSpan = newDate - oldDate1;
                             if (fireSpan.TotalMilliseconds >= 500)
                             {
                                 p1tank.Fire();
-                                // fireSp.Play();
-                                oldDate = newDate;
+                                fireSp.Play();
+                                oldDate1 = newDate;
                             }
                             break;
                         default:
                             break;
                     }
+
+                    // 如果碰到道具，执行相应操作
+                    Item i;
+                    if (p1tank != null && (i = p1tank.IsCrashedWithItem()) != null)
+                    {
+                        switch (i.ItemType)
+                        {
+                            // 炸弹
+                            case 0:
+                                Item.aryItems.Remove(i);
+                                for (int j = 0; j < Tank.aryTank.Count; j++)
+                                {
+                                    Tank t = (Tank)Tank.aryTank[j];
+                                    if (t.IsPlayer == false)
+                                    {
+                                        Tank.aryTank.Remove(t);
+
+                                        // 爆炸动画
+                                        Animation blastAnimation = new Animation(t.X, t.Y, 60, "blast", 8);
+                                        Animation.aryAnimation.Add(blastAnimation);
+                                        // 爆炸音效
+                                        blastSp.Play();
+
+                                        j--;
+                                    }
+                                }
+                                break;
+                            // 星星
+                            case 1:
+                                Item.aryItems.Remove(i);
+                                p1tank.MissileLevel += 1;
+                                break;
+                            // 事件暂停
+                            case 2:
+                                Item.aryItems.Remove(i);
+
+                                isTimeStop = true;
+
+                                System.Timers.Timer timer = new System.Timers.Timer(3000);
+                                timer.Elapsed += (se, ss) => isTimeStop = false;
+                                timer.AutoReset = false;
+                                timer.Start();
+                                break;
+                            default:
+                                break;
+                        }
+                    }
                 }
+
+
+                
 
                 // 响应玩家2键盘操作
                 Tank p2tank = null;
@@ -386,43 +474,98 @@ namespace BattleOfTanks
                     {
                         case Keys.W:
                             p2tank.Direction = "U";
-                            p2tank.Move(false, 6);
-                            if (p2tank.IsOutOfRange(gameScene.Width, gameScene.Height) || p2tank.IsCrashedWithTank() || p2tank.IsCrashedWithWall() || p2tank.IsCrashedWithAnimation())
-                                p2tank.Y += 6;
+                            p2tank.TrueMove(gameScene.Width, gameScene.Height);
                             break;
                         case Keys.S:
                             p2tank.Direction = "D";
-                            p2tank.Move(false, 6);
-                            if (p2tank.IsOutOfRange(gameScene.Width, gameScene.Height) || p2tank.IsCrashedWithTank() || p2tank.IsCrashedWithWall() || p2tank.IsCrashedWithAnimation())
-                                p2tank.Y -= 6;
+                            p2tank.TrueMove(gameScene.Width, gameScene.Height);
                             break;
                         case Keys.A:
                             p2tank.Direction = "L";
-                            p2tank.Move(false, 6);
-                            if (p2tank.IsOutOfRange(gameScene.Width, gameScene.Height) || p2tank.IsCrashedWithTank() || p2tank.IsCrashedWithWall() || p2tank.IsCrashedWithAnimation())
-                                p2tank.X += 6;
+                            p2tank.TrueMove(gameScene.Width, gameScene.Height);
                             break;
                         case Keys.D:
                             p2tank.Direction = "R";
-                            p2tank.Move(false, 6);
-                            if (p2tank.IsOutOfRange(gameScene.Width, gameScene.Height) || p2tank.IsCrashedWithTank() || p2tank.IsCrashedWithWall() || p2tank.IsCrashedWithAnimation())
-                                p2tank.X -= 6;
+                            p2tank.TrueMove(gameScene.Width, gameScene.Height);
                             break;
                         case Keys.J:
                             DateTime newDate = DateTime.Now;
-                            TimeSpan fireSpan = newDate - oldDate;
+                            TimeSpan fireSpan = newDate - oldDate2;
                             if (fireSpan.TotalMilliseconds >= 500)
                             {
                                 p2tank.Fire();
                                 fireSp.Play();
-                                oldDate = newDate;
+                                oldDate2 = newDate;
                             }
                             break;
                         default:
                             break;
                     }
+
+                    // 如果碰到道具，执行相应操作
+                    Item i;
+                    if (p2tank != null && (i = p2tank.IsCrashedWithItem()) != null)
+                    {
+                        switch (i.ItemType)
+                        {
+                            // 炸弹
+                            case 0:
+                                Item.aryItems.Remove(i);
+                                for (int j = 0; j < Tank.aryTank.Count; j++)
+                                {
+                                    Tank t = (Tank)Tank.aryTank[j];
+                                    if (t.IsPlayer == false)
+                                    {
+                                        Tank.aryTank.Remove(t);
+
+                                        // 爆炸动画
+                                        Animation blastAnimation = new Animation(t.X, t.Y, 60, "blast", 8);
+                                        Animation.aryAnimation.Add(blastAnimation);
+                                        // 爆炸音效
+                                        blastSp.Play();
+
+                                        j--;
+                                    }
+                                }
+                                break;
+                            // 星星
+                            case 1:
+                                Item.aryItems.Remove(i);
+                                p2tank.MissileLevel += 1;
+                                break;
+                            // 事件暂停
+                            case 2:
+                                Item.aryItems.Remove(i);
+
+                                isTimeStop = true;
+
+                                System.Timers.Timer timer = new System.Timers.Timer(3000);
+                                timer.Elapsed += (se, ss) => isTimeStop = false;
+                                timer.AutoReset = false;
+                                timer.Start();
+                                break;
+                            default:
+                                break;
+                        }
+                    }
                 }
+
+
             }
+            gameScene.Invalidate();
+        }
+
+        // 道具生成计时器
+        private void itemTimer_Tick(object sender, EventArgs e)
+        {
+            if(Item.aryItems.Count <= 2)
+            {
+                Random rd = new Random();
+
+                Item newItem = new Item(rd.Next(13) * 60 + 15, rd.Next(13) * 60 + 15, 30, rd.Next(3));
+                Item.aryItems.Add(newItem);          
+            }
+
             gameScene.Invalidate();
         }
 
@@ -467,6 +610,7 @@ namespace BattleOfTanks
             tankTimer.Start();
             tankMoveTimer.Start();
             tankFireTimer.Start();
+            itemTimer.Start();
 
             // 新建玩家坦克
             Tank p1Tank = new Tank(0, 0, 60, "p1tank", true, 1);
@@ -485,6 +629,46 @@ namespace BattleOfTanks
             bgSp = new SoundPlayer(Properties.Resources.start);
             bgSp.Play();
 
+        }
+
+        // 于自建地图模式开始游戏
+        private void GameBeginInMode(object sender, EventArgs e)
+        {
+            button5.Visible = false;
+            button6.Visible = false;
+            selectWall_0.Visible = false;
+            selectWall_1.Visible = false;
+            selectWall_2.Visible = false;
+            selectWall_3.Visible = false;
+
+            // 启动计时器
+            missileTimer.Start();
+            keyTimer.Start();
+            tankTimer.Start();
+            tankMoveTimer.Start();
+            tankFireTimer.Start();
+            itemTimer.Start();
+
+            // 取消监听
+            gameScene.MouseUp -= new MouseEventHandler(gameScene_MouseUp);
+            gameScene.MouseMove -= new MouseEventHandler(gameScene_MouseMove);
+
+            preX = -60;
+            preY = -60;
+
+            // 新建玩家坦克
+            Tank p1Tank = new Tank(0, 720, 60, "p1tank", true, 1);
+            Tank.aryTank.Add(p1Tank);
+            // 若为双人游戏，新建玩家2他坦克
+            if (((Button)sender).Text == "双人游戏")
+            {
+                Tank p2Tank = new Tank(720, 720, 60, "p2tank", true, 2);
+                Tank.aryTank.Add(p2Tank);
+            }
+
+            // 背景音乐
+            bgSp = new SoundPlayer(Properties.Resources.start);
+            bgSp.Play();
         }
 
         // 载入随机地图
@@ -548,5 +732,81 @@ namespace BattleOfTanks
             }
         }
 
+        // 新建地图模式
+        private void button4_Click(object sender, EventArgs e)
+        {
+            // 显示游戏界面
+            gameScene.Visible = true;
+            gameStartPanel.Visible = false;
+            gameStartPanel.Enabled = false;
+            button5.Visible = true;
+            button6.Visible = true;
+
+            selectWall_0.Visible = true;
+            selectWall_1.Visible = true;
+            selectWall_2.Visible = true;
+            selectWall_3.Visible = true;
+
+            gameScene.MouseUp += new MouseEventHandler(gameScene_MouseUp);
+            gameScene.MouseMove += new MouseEventHandler(gameScene_MouseMove);
+
+        }
+
+        // 选择墙体类型
+        private void SelectWall(object sender, EventArgs e)
+        {
+            objectType = Convert.ToInt32(((PictureBox)sender).Tag);
+        }
+
+        // 鼠标点击
+        private void gameScene_MouseUp(object sender, MouseEventArgs e)
+        {
+            int X = e.X - e.X % 60;
+            int Y = e.Y - e.Y % 60;
+
+            // 如果该位置有墙体，先去除原墙体
+            foreach(Wall w in Wall.aryWall)
+            {
+                if (X == w.X && Y == w.Y)
+                {
+                    Wall.aryWall.Remove(w);
+                    break;
+                }
+            }
+
+            // 添加墙体
+            switch(objectType)
+            {
+                case 0:
+                    Wall.aryWall.Add(new Wall(X, Y, 60, "walls", true, false, false));
+                    break;
+                case 1:
+                    Wall.aryWall.Add(new Wall(X, Y, 60, "steels", false, false, false));
+                    break;
+                case 2:
+                    Wall.aryWall.Add(new Wall(X, Y, 60, "water", false, false, true));
+                    break;
+                case 3:
+                    Wall.aryWall.Add(new Wall(X, Y, 60, "grass", false, true, true));
+                    break;
+            }
+
+            gameScene.Invalidate();
+        }
+
+        // 鼠标移动
+        private void gameScene_MouseMove(object sender, MouseEventArgs e)
+        {
+            int x = e.X - e.X % 60;
+            int y = e.Y - e.Y % 60;
+
+            if (x == preX && y == preY)
+                return;
+
+            preX = x;
+            preY = y;
+
+            gameScene.Invalidate();
+        }
     }
 }

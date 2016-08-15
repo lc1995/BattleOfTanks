@@ -32,6 +32,13 @@ namespace BattleOfTanks
             Length = length;
             TextureFile = textureFile;
         }
+        public _2DObject()
+        {
+            X = 0;
+            Y = 0;
+            Length = 0;
+            TextureFile = "";
+        }
         // 是否超出边界
         public bool IsOutOfRange(int XRange, int YRange)
         {
@@ -59,8 +66,11 @@ namespace BattleOfTanks
         public bool IsPlayer { set; get; }
 
         // 坦克类型
-        // 0表示管理员坦克，1表示玩家1，2表示玩家2，3表示普通敌方坦克
+        // 0表示管理员坦克，1表示玩家1，2表示玩家2，3表示普通地方坦克
         public int TankType { set; get; }
+
+        // 子弹等级
+        public int MissileLevel { set; get; }
 
         // 方向
         public string Direction { get; set; }
@@ -77,6 +87,7 @@ namespace BattleOfTanks
             IsPlayer = isPlayer;
             Direction = "U";
             TankType = tankType;
+            MissileLevel = 0;
         }
 
         // 发射子弹
@@ -87,16 +98,16 @@ namespace BattleOfTanks
             switch (Direction)
             {
                 case "U":
-                    Missile.aryMissile.Add(new Missile(X + Length / 2 - 9, Y, 18, missileType, Direction, IsPlayer));
+                    Missile.aryMissile.Add(new Missile(X + Length / 2 - 9, Y, 18 + 3 * MissileLevel, missileType, Direction, IsPlayer));
                     break;
                 case "D":
-                    Missile.aryMissile.Add(new Missile(X + Length / 2 - 9, Y + Length, 18, missileType, Direction, IsPlayer));
+                    Missile.aryMissile.Add(new Missile(X + Length / 2 - 9, Y + Length, 18 + 3 * MissileLevel, missileType, Direction, IsPlayer));
                     break;
                 case "L":
-                    Missile.aryMissile.Add(new Missile(X, Y + Length / 2 - 9, 18, missileType, Direction, IsPlayer));
+                    Missile.aryMissile.Add(new Missile(X, Y + Length / 2 - 9, 18 + 3 * MissileLevel, missileType, Direction, IsPlayer));
                     break;
                 case "R":
-                    Missile.aryMissile.Add(new Missile(X + Length, Y + Length / 2 - 9, 18, missileType, Direction, IsPlayer));
+                    Missile.aryMissile.Add(new Missile(X + Length, Y + Length / 2 - 9, 18 + 3 * MissileLevel, missileType, Direction, IsPlayer));
                     break;
                 default:
                     break;
@@ -131,6 +142,14 @@ namespace BattleOfTanks
                     break;
             }
         }
+        // 检测碰撞之后的移动
+        public void TrueMove(int x, int y)
+        {
+            Move(false, 6);
+            if (IsOutOfRange(x, y) || IsCrashedWithTank() || IsCrashedWithWall() || IsCrashedWithAnimation())
+                Move(true, 6);
+
+        }
 
         // 是否与其他坦克碰撞
         public bool IsCrashedWithTank()
@@ -163,6 +182,19 @@ namespace BattleOfTanks
                     return true;
             }
             return false;
+        }
+
+        // 是否与道具碰撞
+        public Item IsCrashedWithItem()
+        {
+            foreach(Item i in Item.aryItems)
+            {
+                if (IsCrashed(i))
+                {
+                    return i;
+                }
+            }
+            return null;
         }
     }
     
@@ -263,4 +295,41 @@ namespace BattleOfTanks
             CurrentFrame = 1;
         }
     }
+
+    // 物品道具类
+    class Item : _2DObject, gameFunc
+    {
+        // 道具类型
+        public int ItemType { get; set; }
+
+        // 静态数组，存档所有的道具
+        public static ArrayList aryItems = new ArrayList();
+
+        // 常量字符串数组，将道具类型和贴图对应起来
+        // 0 -- 炸弹，1 -- 星星， 2 -- 时间冻结
+        private string[] str = { "bomb", "star", "timer" };
+
+        // 构造函数
+        public Item(int x, int y, int length, int itemType) 
+        {
+            X = x;
+            Y = y;
+            Length = length;
+            ItemType = itemType;
+            TextureFile = str[itemType];
+        }
+
+        // 实现接口——清除所有坦克
+        public void DestroyAllTanks()
+        {
+            Tank.aryTank.Clear();
+        }
+
+        // 实现接口——时间暂停
+        public void TimeStop(bool isTimeStop)
+        {
+            isTimeStop = true;
+        }
+    }
 }
+
